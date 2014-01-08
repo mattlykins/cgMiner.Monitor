@@ -21,6 +21,7 @@ public class MainActivity extends Activity {
     TextView tvHashRate, tvAccepted, tvRejected;
     Timer t;
     TimerTask tt;
+    String ip,port;
     
     double mHashRate = 0;
     long mAccepted = 0, mRejected = 0;
@@ -33,6 +34,9 @@ public class MainActivity extends Activity {
         tvHashRate = (TextView) findViewById(R.id.tvHashRate);
         tvAccepted = (TextView) findViewById(R.id.tvAccepted);
         tvRejected = (TextView) findViewById(R.id.tvRejected);
+        
+        ip = "192.168.0.83";
+        port = "4001";
 
         t = new Timer();
         tt = new TimerTask() {
@@ -169,11 +173,8 @@ public class MainActivity extends Activity {
             process(command, ip, port);
         }
 
-        public void runProgram() throws Exception {
+        public void runProgram(String ip,String port) throws Exception {
             String command = "summary";
-            String ip = "192.168.0.83";
-            String port = "4001";
-
             API(command, ip, port);
         }
 
@@ -181,7 +182,7 @@ public class MainActivity extends Activity {
         protected Object doInBackground(Object... params) {
             // TODO Auto-generated method stub
             try {
-                runProgram();
+                runProgram(ip,port);
             }
             catch (Exception e) {
                 // TODO Auto-generated catch block
