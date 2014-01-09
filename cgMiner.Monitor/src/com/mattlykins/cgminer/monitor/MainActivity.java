@@ -11,18 +11,24 @@ import java.util.TimerTask;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-    TextView tvHashRate, tvAccepted, tvRejected;
+    TextView tvHashRate, tvAccepted, tvRejected, tvAddress;
     Timer t;
     TimerTask tt;
-    String ip,port;
-    
+    String ip, port;
+    Context context;
+
     double mHashRate = 0;
     long mAccepted = 0, mRejected = 0;
 
@@ -31,12 +37,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        context = this;
+        loadPref();
+
         tvHashRate = (TextView) findViewById(R.id.tvHashRate);
         tvAccepted = (TextView) findViewById(R.id.tvAccepted);
         tvRejected = (TextView) findViewById(R.id.tvRejected);
-        
-        ip = "192.168.0.83";
-        port = "4001";
+        tvAddress = (TextView) findViewById(R.id.tvAddress);
+
+//        ip = "192.168.0.83";
+//        port = "4001";
 
         t = new Timer();
         tt = new TimerTask() {
@@ -59,6 +69,30 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent = new Intent();
+        intent.setClass(context, SetPreferenceActivity.class);
+        startActivityForResult(intent, 0);
+
+        return true;
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        loadPref();
+    }
+
+    private void loadPref() {
+        SharedPreferences mySharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        String ipPref = mySharedPreferences.getString("prefAddress", "127.0.0.1");
+        String portPref = mySharedPreferences.getString("prefPort", "4001");
+
+        ip = ipPref;
+        port = portPref;
     }
 
     class checkCgminer extends AsyncTask {
@@ -100,7 +134,7 @@ public class MainActivity extends Activity {
                     else if (name.equals("Rejected")) {
                         mRejected = Long.valueOf(value);
                     }
-                    
+
                     publishProgress(null);
                 }
             }
@@ -173,8 +207,9 @@ public class MainActivity extends Activity {
             process(command, ip, port);
         }
 
-        public void runProgram(String ip,String port) throws Exception {
+        public void runProgram(String ip, String port) throws Exception {
             String command = "summary";
+            loadPref();
             API(command, ip, port);
         }
 
@@ -182,7 +217,7 @@ public class MainActivity extends Activity {
         protected Object doInBackground(Object... params) {
             // TODO Auto-generated method stub
             try {
-                runProgram(ip,port);
+                runProgram(ip, port);
             }
             catch (Exception e) {
                 // TODO Auto-generated catch block
@@ -193,15 +228,11 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onProgressUpdate(Object... values) {
-            // TODO Auto-generated method stub            
+            // TODO Auto-generated method stub
             tvHashRate.setText(String.valueOf(mHashRate));
             tvAccepted.setText(String.valueOf(mAccepted));
-            tvRejected.setText(String.valueOf(mRejected));            
+            tvRejected.setText(String.valueOf(mRejected));
+            tvAddress.setText(String.valueOf(ip + ":" + port));
         }
-        
-        
-        
-        
     }
-
 }
