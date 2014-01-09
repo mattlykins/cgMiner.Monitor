@@ -45,8 +45,8 @@ public class MainActivity extends Activity {
         tvRejected = (TextView) findViewById(R.id.tvRejected);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
 
-//        ip = "192.168.0.83";
-//        port = "4001";
+        // ip = "192.168.0.83";
+        // port = "4001";
 
         t = new Timer();
         tt = new TimerTask() {
@@ -54,7 +54,9 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                new checkCgminer().execute();
+                loadPref();
+                String[] parameters = {ip,port};
+                new checkCgminer().execute(parameters);
                 t.purge();
             }
 
@@ -73,15 +75,14 @@ public class MainActivity extends Activity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Intent intent = new Intent();
-        intent.setClass(context, SetPreferenceActivity.class);
-        startActivityForResult(intent, 0);
-
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent();
+                intent.setClass(context, SetPreferenceActivity.class);
+                startActivityForResult(intent, 0);
+                break;
+        }
         return true;
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        loadPref();
     }
 
     private void loadPref() {
@@ -91,11 +92,17 @@ public class MainActivity extends Activity {
         String ipPref = mySharedPreferences.getString("prefAddress", "127.0.0.1");
         String portPref = mySharedPreferences.getString("prefPort", "4001");
 
+        Log.d("TEST", "Loaded Prefs " + ipPref + ":" + portPref);
+
         ip = ipPref;
         port = portPref;
     }
 
-    class checkCgminer extends AsyncTask {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        loadPref();
+    }
+
+    class checkCgminer extends AsyncTask<String, Void, Void> {
         int MAXRECEIVESIZE = 65535;
 
         Socket socket = null;
@@ -209,25 +216,33 @@ public class MainActivity extends Activity {
 
         public void runProgram(String ip, String port) throws Exception {
             String command = "summary";
-            loadPref();
             API(command, ip, port);
         }
 
         @Override
-        protected Object doInBackground(Object... params) {
+        protected Void doInBackground(String... params) {
             // TODO Auto-generated method stub
-            try {
-                runProgram(ip, port);
-            }
-            catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            String tempIp = "", tempPort = "";
+
+            if (params.length == 2) {
+                tempIp = params[0];
+                tempPort = params[1];
+
+                ip = tempIp;
+                port = tempPort;
+
+                try {
+                    runProgram(ip, port);
+                }
+                catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
             return null;
         }
 
-        @Override
-        protected void onProgressUpdate(Object... values) {
+        protected void onProgressUpdate() {
             // TODO Auto-generated method stub
             tvHashRate.setText(String.valueOf(mHashRate));
             tvAccepted.setText(String.valueOf(mAccepted));
