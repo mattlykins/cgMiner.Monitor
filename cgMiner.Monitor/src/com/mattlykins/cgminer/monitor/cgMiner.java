@@ -9,13 +9,12 @@ import java.net.Socket;
 import android.util.Log;
 
 public class cgMiner {
-    static final public String TAG = "cgMiner";
+    public Double HashRate = 0.0;
+    public Long Accepted = (long) 0;
+    public Long Rejected = (long) 0;
     static final int MAXRECEIVESIZE = 65535;
     static final String SUMMARY_CMD = "summary";
     Socket mSocket = null;
-    Double mHashRate = 0.0;
-    Long mAccepted = (long) 0;
-    Long mRejected = (long) 0;
 
     public cgMiner(String _ip, String _port) throws Exception {
         mSocket = makeConnection(_ip, _port);
@@ -23,7 +22,6 @@ public class cgMiner {
             String tempString = receiveData();
             closeSocket();
             processString(tempString);
-            Log.d("TEST",mHashRate + " " + mAccepted + " " + mRejected);
         }
         else{
             Log.d("TEST","Could not connect to server");
@@ -105,16 +103,17 @@ public class cgMiner {
                     mName = mNameValue[0];
                     mValue = mNameValue[1];
                     
-                    Log.d("TEST", mName + " " + mValue);
+                    Log.d("TEST", mName + " " + mValue);                    
+                    
                     
                     if (mName.equals("MHS 5s")) {
-                        mHashRate = Double.valueOf(mValue);
+                        HashRate = Double.valueOf(mValue);
                     }
                     else if (mName.equals("Accepted")) {
-                        mAccepted = Long.valueOf(mValue);
+                        Accepted = Long.valueOf(mValue);
                     }
                     else if (mName.equals("Rejected")) {
-                        mRejected = Long.valueOf(mValue);
+                       Rejected = Long.valueOf(mValue);
                     }
                 }
             }
