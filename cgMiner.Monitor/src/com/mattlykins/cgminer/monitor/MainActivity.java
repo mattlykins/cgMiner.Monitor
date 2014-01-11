@@ -1,5 +1,6 @@
 package com.mattlykins.cgminer.monitor;
 
+import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -15,37 +16,33 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
     static final int mInterval = 10*1000;
     static final public String TAG = "MAIN";
-    private Handler mHandler;
     TextView tvHashRate, tvAccepted, tvRejected, tvAddress;
-    //Timer t;
-    //TimerTask tt;
     String ip, port;
     Context context;
     cgMiner cgM;
+    boolean timerEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        
-        
-        mHandler = new Handler();
 
         ip = "192.168.0.83";
         port = "4001";
 
-        context = this;
-        // loadPref();
+        context = this;        
 
         tvHashRate = (TextView) findViewById(R.id.tvHashRate);
         tvAccepted = (TextView) findViewById(R.id.tvAccepted);
         tvRejected = (TextView) findViewById(R.id.tvRejected);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
+        
+        loadPref();
         
         callAsynchronousTask();
 
@@ -54,7 +51,7 @@ public class MainActivity extends Activity {
     
     public void callAsynchronousTask() {
         final Handler handler = new Handler();
-        Timer timer = new Timer();
+        final Timer timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {       
             @Override
             public void run() {
@@ -62,7 +59,13 @@ public class MainActivity extends Activity {
                     public void run() {       
                         try {
                             cgMinerAsync performBackgroundTask = new cgMinerAsync();
-                            performBackgroundTask.execute();
+                            if( timerEnabled ){
+                                performBackgroundTask.execute();
+                            }
+                            else{
+                                timer.cancel();
+                            }
+                            
                         } catch (Exception e) {
                             Log.e(TAG,Log.getStackTraceString(e));
                         }
@@ -74,6 +77,8 @@ public class MainActivity extends Activity {
     }
     
     class cgMinerAsync extends AsyncTask<Void, Void, Void>{
+        
+        private int err = 0;
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -81,23 +86,51 @@ public class MainActivity extends Activity {
             try {
                 cgM = new cgMiner(ip, port);
             }
+            catch (ConnectException CE) {
+                // TODO Auto-generated catch block
+                err = -1;                
+            }
             catch (Exception e) {
                 // TODO Auto-generated catch block
                 Log.e(TAG,Log.getStackTraceString(e));
+                err = -2;
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+            loadPref();
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
             // TODO Auto-generated method stub
             super.onPostExecute(result);
-            tvHashRate.setText(String.valueOf(cgM.HashRate));
-            tvAccepted.setText(String.valueOf(cgM.Accepted));
-            tvRejected.setText(String.valueOf(cgM.Rejected));
-            tvAddress.setText(ip+":"+port);
+            if( err == 0){
+                timerEnabled = true;
+                tvHashRate.setText(String.valueOf(cgM.HashRate));
+                tvAccepted.setText(String.valueOf(cgM.Accepted));
+                tvRejected.setText(String.valueOf(cgM.Rejected));
+                tvAddress.setText(ip+":"+port);                
+            }
+            else{
+                Toast.makeText(context, "Cannot connect to " + ip + ":" + port,
+                        Toast.LENGTH_SHORT).show();
+                timerEnabled = false;
+                resetTextViews();
+            }
         }
         
+    }
+    
+    public void resetTextViews(){
+        tvHashRate.setText("---");
+        tvAccepted.setText("---");
+        tvRejected.setText("---");
+        tvAddress.setText(ip+":"+port);
     }
     
     
@@ -161,10 +194,16 @@ public class MainActivity extends Activity {
         port = portPref;
 
         Log.d("TEST", "Loaded Prefs " + ip + ":" + port);
+        
+        resetTextViews();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //loadPref();
+        loadPref();
+        if(!timerEnabled){
+            timerEnabled = true;
+            callAsynchronousTask();
+        }
     }
 
 }

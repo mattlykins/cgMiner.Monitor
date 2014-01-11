@@ -3,8 +3,8 @@
 
     <EditTextPreference
         android:key="prefAddress"
-        android:title="IP Address" />
+        android:title="IP Address (XXX.XXX.XXX.XXX)" android:summary="Address of the computer running CGMiner"/>
     <EditTextPreference
         android:key="prefPort"
-        android:title="Port" />
+        android:title="Port" android:summary="CGMiner API Port"/>
 </PreferenceScreen>
