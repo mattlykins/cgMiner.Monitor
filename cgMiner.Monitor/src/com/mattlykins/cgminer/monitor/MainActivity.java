@@ -1,6 +1,11 @@
 package com.mattlykins.cgminer.monitor;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Context;
@@ -12,19 +17,24 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-    
+    static final int mInterval = 10*1000;
     static final public String TAG = "MAIN";
-    
+    private Handler mHandler;
     TextView tvHashRate, tvAccepted, tvRejected, tvAddress;
     //Timer t;
     //TimerTask tt;
     String ip, port;
     Context context;
+    cgMiner cgM;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        
+        
+        mHandler = new Handler();
 
         ip = "192.168.0.83";
         port = "4001";
@@ -37,60 +47,87 @@ public class MainActivity extends Activity {
         tvRejected = (TextView) findViewById(R.id.tvRejected);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
         
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    cgMiner cgM = new cgMiner(ip, port);
-                    Log.d("TEST", cgM.HashRate + " " + cgM.Accepted + " " + cgM.Rejected);
-                    tvHashRate.setText(String.valueOf(cgM.HashRate));
-                    tvAccepted.setText(String.valueOf(cgM.Accepted));
-                    tvRejected.setText(String.valueOf(cgM.Rejected));
-                    tvAddress.setText(ip+":"+port);   
-                }
-                catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    Log.e(TAG, Log.getStackTraceString(e));
-                }
-            }
-        };
-        new Thread(runnable).start();
-        
-        
+        callAsynchronousTask();
 
-//        t = new Timer();
-//        tt = new TimerTask() {
-//
-//            @Override
-//            public void run() {
-//                try {
-//                    //loadPref();
-//                    //runProgram(ip, port);
-//                    
-//                    runOnUiThread(new Runnable() {
-//                        
-//                        @Override
-//                        public void run() {
-//                            // TODO Auto-generated method stub
-//                            tvHashRate.setText(String.valueOf(mHashRate));
-//                            tvAccepted.setText(String.valueOf(mAccepted));
-//                            tvRejected.setText(String.valueOf(mRejected));
-//                            tvAddress.setText(ip+":"+port);                            
-//                        }
-//                    });
-//                }
-//                catch (Exception e) {
-//                    // TODO Auto-generated catch block
-//                    Log.d("TEST", "Timer:" + e.toString());
-//                }
-//                t.purge();
-//            }
-//
-//        };
-//
-//        t.scheduleAtFixedRate(tt, 0, 10 * 1000);
 
     }
+    
+    public void callAsynchronousTask() {
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask doAsynchronousTask = new TimerTask() {       
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {       
+                        try {
+                            cgMinerAsync performBackgroundTask = new cgMinerAsync();
+                            performBackgroundTask.execute();
+                        } catch (Exception e) {
+                            Log.e(TAG,Log.getStackTraceString(e));
+                        }
+                    }
+                });
+            }
+        };
+        timer.schedule(doAsynchronousTask, 0, mInterval);
+    }
+    
+    class cgMinerAsync extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // TODO Auto-generated method stub
+            try {
+                cgM = new cgMiner(ip, port);
+            }
+            catch (Exception e) {
+                // TODO Auto-generated catch block
+                Log.e(TAG,Log.getStackTraceString(e));
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            // TODO Auto-generated method stub
+            super.onPostExecute(result);
+            tvHashRate.setText(String.valueOf(cgM.HashRate));
+            tvAccepted.setText(String.valueOf(cgM.Accepted));
+            tvRejected.setText(String.valueOf(cgM.Rejected));
+            tvAddress.setText(ip+":"+port);
+        }
+        
+    }
+    
+    
+//    Runnable mRunner = new Runnable() {
+//        @Override
+//        public void run() {
+//            try {
+//                cgMiner cgM = new cgMiner(ip, port);
+//                Log.d("TEST", cgM.HashRate + " " + cgM.Accepted + " " + cgM.Rejected);
+//                tvHashRate.setText(String.valueOf(cgM.HashRate));
+//                tvAccepted.setText(String.valueOf(cgM.Accepted));
+//                tvRejected.setText(String.valueOf(cgM.Rejected));
+//                tvAddress.setText(ip+":"+port); 
+//                mHandler.postDelayed(mRunner, mInterval);
+//            }
+//            catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                Log.e(TAG, Log.getStackTraceString(e));
+//            }
+//        }
+//    };    
+//    
+//    void startRunning(){
+//        mRunner.run();
+//    }
+//    
+//    void stopRunning(){
+//        mHandler.removeCallbacks(mRunner);
+//    }  
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
