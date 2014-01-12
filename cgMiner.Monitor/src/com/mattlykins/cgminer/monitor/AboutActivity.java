@@ -1,6 +1,4 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <!--
+/*
 Copyright (c) 2014 Matt Lykins
 
 This file is part of Remote Monitor for CGMiner.
@@ -16,17 +14,20 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Remote Monitor for CGMiner.  If not, see <http://www.gnu.org/licenses/>.
-    -->
+along with Remote Monitor for CGMiner.  If not, see <http://www.gnu.org/licenses/>.
+*/
+package com.mattlykins.cgminer.monitor;
 
-    <item
-        android:id="@+id/action_settings"
-        android:showAsAction="never"
-        android:orderInCategory="1"
-        android:title="@string/action_settings"/>
-    <item
-        android:id="@+id/action_about"
-        android:orderInCategory="90"
-        android:title="About"/>
+import android.os.Bundle;
+import android.app.Activity;
 
-</menu>
+public class AboutActivity extends Activity
+{
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_about);
+	}
+}

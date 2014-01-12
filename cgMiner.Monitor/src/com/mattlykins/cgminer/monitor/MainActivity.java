@@ -22,6 +22,7 @@ import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,6 +181,10 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClass(context, SetPreferenceActivity.class);
                 startActivityForResult(intent, 0);
+                break;
+            case R.id.action_about:
+                Intent aboutintent = new Intent(this, AboutActivity.class);
+                startActivityForResult(aboutintent, 0);
                 break;
         }
         return true;

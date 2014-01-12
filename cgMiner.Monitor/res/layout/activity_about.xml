@@ -1,0 +1,95 @@
+<!--
+Copyright (c) 2014 Matt Lykins
+
+This file is part of Remote Monitor for CGMiner.
+
+Remote Monitor for CGMiner is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Remote Monitor for CGMiner is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Remote Monitor for CGMiner.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".AboutActivity" >
+
+    <TextView
+        android:id="@+id/tvAbout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Remote Monitor For CGMiner"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/tvAbout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout1"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:text="Copyright (c) 2014 Matt Lykins\nunder GNU GPL V3"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+        <TextView
+        android:id="@+id/tvAbout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout2"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="65dp"
+        android:text="Accepting Donations\n"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/tvAbout4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout3"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="Bitcoin:\n
+        1G6CwKicocRPU4B9tYCbtFc64hNnAboXhr\n\n"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+        <TextView
+        android:id="@+id/tvAbout5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout4"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="LiteCoin:\n
+        LctFjuSd9k2ui5zDWcHxpQWcUXUvMNYngZ\n\n"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        
+            <TextView
+        android:id="@+id/tvAbout6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAbout5"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="FeatherCoin:\n
+        6naTpXio9CUUyjWL1dqC5KAXaipFJSqsHT"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+</RelativeLayout>

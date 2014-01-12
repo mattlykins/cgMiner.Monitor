@@ -46,6 +46,11 @@ along with Remote Monitor for CGMiner.  If not, see <http://www.gnu.org/licenses
             android:name=".SetPreferenceActivity"
             android:screenOrientation="portrait">
         </activity>
+               <activity
+            android:name="com.mattlykins.cgminer.monitor.AboutActivity"
+            android:label="About"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
