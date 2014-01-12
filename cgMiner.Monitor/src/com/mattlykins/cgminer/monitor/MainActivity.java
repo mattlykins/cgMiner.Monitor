@@ -132,35 +132,6 @@ public class MainActivity extends Activity {
         tvRejected.setText("---");
         tvAddress.setText(ip+":"+port);
     }
-    
-    
-//    Runnable mRunner = new Runnable() {
-//        @Override
-//        public void run() {
-//            try {
-//                cgMiner cgM = new cgMiner(ip, port);
-//                Log.d("TEST", cgM.HashRate + " " + cgM.Accepted + " " + cgM.Rejected);
-//                tvHashRate.setText(String.valueOf(cgM.HashRate));
-//                tvAccepted.setText(String.valueOf(cgM.Accepted));
-//                tvRejected.setText(String.valueOf(cgM.Rejected));
-//                tvAddress.setText(ip+":"+port); 
-//                mHandler.postDelayed(mRunner, mInterval);
-//            }
-//            catch (Exception e) {
-//                // TODO Auto-generated catch block
-//                Log.e(TAG, Log.getStackTraceString(e));
-//            }
-//        }
-//    };    
-//    
-//    void startRunning(){
-//        mRunner.run();
-//    }
-//    
-//    void stopRunning(){
-//        mHandler.removeCallbacks(mRunner);
-//    }  
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
