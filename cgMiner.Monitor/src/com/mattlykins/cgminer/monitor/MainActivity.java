@@ -33,6 +33,8 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,9 +42,11 @@ public class MainActivity extends Activity {
     static final int mInterval = 10*1000;
     static final public String TAG = "MAIN";
     TextView tvHashRate, tvAccepted, tvRejected, tvAddress;
+    Button bQuit;
     String ip, port;
     Context context;
     cgMiner cgM;
+    Timer timer;
     boolean timerEnabled = true;
 
     @Override
@@ -59,6 +63,17 @@ public class MainActivity extends Activity {
         tvAccepted = (TextView) findViewById(R.id.tvAccepted);
         tvRejected = (TextView) findViewById(R.id.tvRejected);
         tvAddress = (TextView) findViewById(R.id.tvAddress);
+        bQuit = (Button) findViewById(R.id.bQuit);
+        
+        bQuit.setOnClickListener(new View.OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                timer.cancel();
+                System.exit(0);                
+            }
+        });
         
         loadPref();
         
@@ -69,7 +84,7 @@ public class MainActivity extends Activity {
     
     public void callAsynchronousTask() {
         final Handler handler = new Handler();
-        final Timer timer = new Timer();
+        timer = new Timer();
         TimerTask doAsynchronousTask = new TimerTask() {       
             @Override
             public void run() {
