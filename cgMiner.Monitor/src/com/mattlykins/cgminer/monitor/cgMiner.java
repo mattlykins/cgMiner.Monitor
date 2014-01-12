@@ -42,7 +42,7 @@ public class cgMiner {
             processString(tempString);
         }
         else{
-            Log.d("TEST","Could not connect to server");
+            //Log.d("TEST","Could not connect to server");
             
         }
     }
@@ -59,7 +59,7 @@ public class cgMiner {
         mIp = InetAddress.getByName(_ip);
         mPort = Integer.parseInt(_port);
         
-        Log.d("TEST", "ip = " + mIp + " port = " + mPort);
+        //Log.d("TEST", "ip = " + mIp + " port = " + mPort);
 
         // Log.d("TEST", "Attempting to send '" + cmd + "' to " +
         // ip.getHostAddress() + ":" + port);
@@ -102,7 +102,7 @@ public class cgMiner {
 
         mResult = mStringBuffer.toString();
 
-        Log.d("TEST", "Answer='" + mResult + "'");
+        //Log.d("TEST", "Answer='" + mResult + "'");
 
         return mResult;
     }
@@ -121,7 +121,7 @@ public class cgMiner {
                     mName = mNameValue[0];
                     mValue = mNameValue[1];
                     
-                    Log.d("TEST", mName + " " + mValue);                    
+                    //Log.d("TEST", mName + " " + mValue);                    
                     
                     
                     if (mName.equals("MHS 5s")) {

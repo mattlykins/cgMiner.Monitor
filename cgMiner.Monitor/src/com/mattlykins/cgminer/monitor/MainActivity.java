@@ -197,12 +197,12 @@ public class MainActivity extends Activity {
         String ipPref = mySharedPreferences.getString("prefAddress", "127.0.0.1");
         String portPref = mySharedPreferences.getString("prefPort", "4001");
 
-        Log.d("TEST", "Loaded Prefs " + ipPref + ":" + portPref);
+        //Log.d("TEST", "Loaded Prefs " + ipPref + ":" + portPref);
 
         ip = ipPref;
         port = portPref;
 
-        Log.d("TEST", "Loaded Prefs " + ip + ":" + port);
+        //Log.d("TEST", "Loaded Prefs " + ip + ":" + port);
         
         resetTextViews();
     }

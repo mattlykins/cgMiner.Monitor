@@ -29,8 +29,6 @@ public class SetPreferenceActivity extends Activity {
      // TODO Auto-generated method stub
      super.onCreate(savedInstanceState);
      
-     Log.d("TEST","FERRET!");
-     
      getFragmentManager().beginTransaction().replace(android.R.id.content,
                    new PrefsFragment()).commit();    
     }
