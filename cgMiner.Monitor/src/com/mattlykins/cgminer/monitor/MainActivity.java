@@ -22,6 +22,8 @@ import java.net.ConnectException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.mattlykins.cgminer.utility.cgMiner;
+
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -76,12 +78,13 @@ public class MainActivity extends Activity {
             }
         });
         
-        loadPref();
+        //loadPref();
         
-        callAsynchronousTask();
+        //callAsynchronousTask();
 
 
     }
+    
     
     public void callAsynchronousTask() {
         final Handler handler = new Handler();
@@ -119,6 +122,7 @@ public class MainActivity extends Activity {
             // TODO Auto-generated method stub
             try {
                 cgM = new cgMiner(ip, port);
+                cgM.runMonitor();
             }
             catch (ConnectException CE) {
                 // TODO Auto-generated catch block
@@ -214,5 +218,4 @@ public class MainActivity extends Activity {
             callAsynchronousTask();
         }
     }
-
 }

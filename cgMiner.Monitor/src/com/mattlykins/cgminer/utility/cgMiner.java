@@ -16,7 +16,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Remote Monitor for CGMiner.  If not, see <http://www.gnu.org/licenses/>.
 */
-package com.mattlykins.cgminer.monitor;
+package com.mattlykins.cgminer.utility;
 
 
 import java.io.InputStreamReader;
@@ -33,9 +33,16 @@ public class cgMiner {
     static final int MAXRECEIVESIZE = 65535;
     static final String SUMMARY_CMD = "summary";
     Socket mSocket = null;
+    String mIp,mPort;
 
     public cgMiner(String _ip, String _port) throws Exception {
-        mSocket = makeConnection(_ip, _port);
+        mIp = _ip;
+        mPort = _port;
+    }
+    
+    
+    public void runMonitor() throws Exception{
+        mSocket = makeConnection(mIp, mPort);
         if (mSocket != null) {
             String tempString = receiveData();
             closeSocket();
@@ -102,7 +109,7 @@ public class cgMiner {
 
         mResult = mStringBuffer.toString();
 
-        //Log.d("TEST", "Answer='" + mResult + "'");
+        Log.d("TEST", "Answer='" + mResult + "'");
 
         return mResult;
     }
@@ -121,7 +128,7 @@ public class cgMiner {
                     mName = mNameValue[0];
                     mValue = mNameValue[1];
                     
-                    //Log.d("TEST", mName + " " + mValue);                    
+                    Log.d("TEST", mName + " " + mValue);                    
                     
                     
                     if (mName.equals("MHS 5s")) {
